@@ -5,6 +5,8 @@ build:
             name: install golang
             code: |-
                 export GOLANG_VERSION=1.3.3
+                sudo mkdir -p /usr/local/go
+                sudo chown ubuntu:ubuntu /usr/local/go
                 sudo apt-get update
                 sudo apt-get install bzr mercurial git -y
                 export GOPATH="$HOME/go" | sudo tee -a /etc/profile
