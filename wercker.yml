@@ -42,7 +42,6 @@ build:
         - script:
             name: install go dependencies
             code: |-
-                env
                 go get -u github.com/golang/lint/golint
                 go get -u code.google.com/p/go.tools/cmd/cover
                 go get -u code.google.com/p/go.tools/cmd/goimports
