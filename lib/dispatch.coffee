@@ -1,6 +1,7 @@
 {Subscriber, Emitter} = require('emissary')
 Gofmt = require('./gofmt')
 Govet = require('./govet')
+Gotest = require('./gotest')
 Golint = require('./golint')
 Gopath = require('./gopath')
 Gobuild = require('./gobuild')
@@ -36,6 +37,7 @@ class Dispatch
 
     @gofmt = new Gofmt(this)
     @govet = new Govet(this)
+    @gotest = new Gotest(this)
     @golint = new Golint(this)
     @gopath = new Gopath(this)
     @gobuild = new Gobuild(this)
@@ -48,6 +50,7 @@ class Dispatch
     gofmtsubscription = @gofmt.on('reset', (editor) => @resetState(editor))
     golintsubscription = @golint.on('reset', (editor) => @resetState(editor))
     govetsubscription = @govet.on('reset', (editor) => @resetState(editor))
+    gotestsubscription = @gotest.on('reset', (editor) => @resetState(editor))
     gopathsubscription = @gopath.on('reset', (editor) => @resetState(editor))
     gobuildsubscription = @gobuild.on('reset', (editor) => @resetState(editor))
     gocoversubscription = @gocover.on('reset', (editor) => @resetState(editor))
@@ -55,6 +58,7 @@ class Dispatch
     @subscribe(gofmtsubscription)
     @subscribe(golintsubscription)
     @subscribe(govetsubscription)
+    @subscribe(gotestsubscription)
     @subscribe(gopathsubscription)
     @subscribe(gobuildsubscription)
     @subscribe(gocoversubscription)
@@ -73,6 +77,7 @@ class Dispatch
     @gobuild.destroy()
     @golint.destroy()
     @govet.destroy()
+    @gotest.destroy()
     @gopath.destroy()
     @gofmt.destroy()
     @godef.destroy()
@@ -80,6 +85,7 @@ class Dispatch
     @gobuild = null
     @golint = null
     @govet = null
+    @gotest = null
     @gopath = null
     @gofmt = null
     @godef = null
@@ -291,6 +297,8 @@ class Dispatch
           @gopath.check(editor, saving, callback)
         (callback) =>
           @gobuild.checkBuffer(editor, saving, callback)
+        (callback) =>
+          @gotest.checkBuffer(editor, callback)
       ], (err, checkmessages) =>
         @collectMessages(checkmessages)
         @emit('dispatch-complete', editor)
